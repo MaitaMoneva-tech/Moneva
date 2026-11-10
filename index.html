@@ -24,6 +24,7 @@
       <nav class="nav">
         <button class="nav-btn active" data-page="dashboard"><span>⌂</span> Dashboard</button>
         <button class="nav-btn" data-page="transactions"><span>↕</span> Transaksi</button>
+        <button class="nav-btn" data-page="reports"><span>▥</span> Laporan</button>
         <button class="nav-btn" data-page="installments"><span>▤</span> Tracker Cicilan</button>
       </nav>
       <div class="sidebar-note">
@@ -111,6 +112,34 @@
           </div>
           <div id="transaction-list"></div>
         </article>
+      </section>
+
+      <section id="reports-page" class="page">
+        <div class="page-intro"><div><h2>Laporan keuangan</h2><p>Pahami ke mana uangmu pergi dan dari mana pemasukanmu berasal.</p></div></div>
+        <article class="panel report-filter-panel">
+          <div class="report-filter-heading"><div><h3>Periode laporan</h3><p>Pilih rentang waktu yang ingin kamu analisis.</p></div>
+            <select id="report-period" class="filter-select" aria-label="Periode laporan">
+              <option value="month">Bulan ini</option><option value="last-month">Bulan lalu</option><option value="year">Tahun ini</option><option value="all">Semua waktu</option><option value="custom">Pilih tanggal</option>
+            </select>
+          </div>
+          <div id="report-custom-range" class="report-custom-range" hidden>
+            <label class="field-label">Dari tanggal<input id="report-start" type="date"></label>
+            <label class="field-label">Sampai tanggal<input id="report-end" type="date"></label>
+          </div>
+          <p id="report-period-label" class="report-period-label"></p>
+        </article>
+        <div class="report-summary-grid">
+          <article class="report-stat income-report"><span>Pemasukan</span><strong id="report-income">Rp0</strong><small id="report-income-count">0 transaksi</small></article>
+          <article class="report-stat expense-report"><span>Pengeluaran</span><strong id="report-expense">Rp0</strong><small id="report-expense-count">0 transaksi</small></article>
+          <article class="report-stat balance-report"><span>Selisih</span><strong id="report-net">Rp0</strong><small>Pemasukan dikurangi pengeluaran</small></article>
+        </div>
+        <div class="report-grid">
+          <article class="panel report-panel"><div class="panel-heading"><div><h3>Pengeluaran per kategori</h3><p>Urutan kategori dengan pengeluaran terbesar.</p></div></div><div id="report-expense-categories" class="report-bars"></div></article>
+          <article class="panel report-panel"><div class="panel-heading"><div><h3>Sumber pemasukan</h3><p>Dari mana uangmu berasal.</p></div></div><div id="report-income-categories" class="report-bars"></div></article>
+        </div>
+        <article class="panel report-panel"><div class="panel-heading"><div><h3>Tren enam bulan</h3><p>Perbandingan pemasukan dan pengeluaran per bulan.</p></div></div><div id="report-monthly-trend" class="monthly-trend"></div></article>
+        <article class="panel report-panel"><div class="panel-heading"><div><h3>Rincian transaksi</h3><p>Semua transaksi dalam periode terpilih.</p></div><span id="report-transaction-count" class="report-count">0 transaksi</span></div><div id="report-transaction-list" class="report-transaction-list"></div></article>
+        <p class="disclaimer">Laporan dihitung dari transaksi yang tersimpan di perangkat ini.</p>
       </section>
 
       <section id="installments-page" class="page">

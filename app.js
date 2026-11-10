@@ -27,7 +27,8 @@ function setPage(page){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   $(page+"-page").classList.add("active");
   document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
-  $("page-title").textContent=({dashboard:"Ringkasan keuangan",transactions:"Transaksi",installments:"Tracker cicilan"})[page];
+  $("page-title").textContent=({dashboard:"Ringkasan keuangan",transactions:"Transaksi",reports:"Laporan keuangan",installments:"Tracker cicilan"})[page];
+  if(page==="reports")renderReports();
   window.scrollTo({top:0,behavior:"smooth"});
 }
 document.querySelectorAll(".nav-btn").forEach(b=>b.addEventListener("click",()=>setPage(b.dataset.page)));
@@ -69,10 +70,37 @@ function renderInstallments(){
   document.querySelectorAll("[data-delete-i]").forEach(b=>b.onclick=()=>{if(confirm("Hapus data cicilan ini?")){state.installments=state.installments.filter(x=>x.id!==b.dataset.deleteI);save();toast("Cicilan dihapus.");}});
   document.querySelectorAll("[data-pay-i]").forEach(b=>b.onclick=()=>{const item=state.installments.find(x=>x.id===b.dataset.payI);if(!item)return;const amount=Math.min(Number(item.monthly),Number(item.remaining));if(amount<=0)return toast("Cicilan ini sudah lunas.");if(confirm("Catat pembayaran "+money(amount)+" untuk "+item.name+"?")){item.remaining=Math.max(0,Number(item.remaining)-amount);save();toast("Pembayaran berhasil dicatat.");}});
 }
-function render(){renderDashboard();renderTransactions();renderInstallments();}
+function renderReports(){
+  const mode=$("report-period").value;
+  const now=new Date();
+  let start=null,end=null,label="Semua waktu";
+  if(mode==="month") {start=new Date(now.getFullYear(),now.getMonth(),1);end=new Date(now.getFullYear(),now.getMonth()+1,0);label=now.toLocaleDateString("id-ID",{month:"long",year:"numeric"});}
+  else if(mode==="last-month") {start=new Date(now.getFullYear(),now.getMonth()-1,1);end=new Date(now.getFullYear(),now.getMonth(),0);label=start.toLocaleDateString("id-ID",{month:"long",year:"numeric"});}
+  else if(mode==="year") {start=new Date(now.getFullYear(),0,1);end=new Date(now.getFullYear(),11,31);label="Tahun "+now.getFullYear();}
+  else if(mode==="custom") {const a=$("report-start").value,b=$("report-end").value;start=a?new Date(a+"T00:00:00"):null;end=b?new Date(b+"T23:59:59"):null;label=(a?formatDate(a):"Awal")+" – "+(b?formatDate(b):"Sekarang");}
+  const inRange=state.transactions.filter(t=>{const d=new Date(t.date+"T12:00:00");return (!start||d>=start)&&(!end||d<=end);}).sort((a,b)=>b.date.localeCompare(a.date));
+  const sums=totals(inRange),incomeCount=inRange.filter(t=>t.type==="income").length,expenseCount=inRange.filter(t=>t.type==="expense").length;
+  $("report-period-label").textContent=label;
+  $("report-income").textContent=money(sums.income);$("report-expense").textContent=money(sums.expense);$("report-net").textContent=money(sums.income-sums.expense);
+  $("report-income-count").textContent=incomeCount+" transaksi";$("report-expense-count").textContent=expenseCount+" transaksi";
+  $("report-transaction-count").textContent=inRange.length+" transaksi";
+  const renderBars=(id,type)=>{
+    const map={};inRange.filter(t=>t.type===type).forEach(t=>map[t.category]=(map[t.category]||0)+Number(t.amount||0));
+    const entries=Object.entries(map).sort((a,b)=>b[1]-a[1]);const total=entries.reduce((s,x)=>s+x[1],0);const target=$(id);
+    target.innerHTML=entries.length?entries.map(([name,value])=>`<div class="report-bar-row"><div class="report-bar-label"><span>${escapeHTML(name)}</span><strong>${money(value)}</strong></div><div class="report-bar-track"><span style="width:${total?value/total*100:0}%"></span></div><small>${total?Math.round(value/total*100):0}% dari total ${type==="expense"?"pengeluaran":"pemasukan"}</small></div>`).join(""):'<div class="empty-state">Belum ada data pada periode ini.</div>';
+  };
+  renderBars("report-expense-categories","expense");renderBars("report-income-categories","income");
+  const monthList=[];for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);const key=monthKey(isoToday(d));const items=state.transactions.filter(t=>monthKey(t.date)===key);const v=totals(items);monthList.push({label:d.toLocaleDateString("id-ID",{month:"short"}),income:v.income,expense:v.expense});}
+  const max=Math.max(1,...monthList.flatMap(x=>[x.income,x.expense]));
+  $("report-monthly-trend").innerHTML=monthList.map(m=>`<div class="trend-month"><div class="trend-bars"><span class="trend-income" style="height:${m.income/max*100}%" title="Pemasukan ${money(m.income)}"></span><span class="trend-expense" style="height:${m.expense/max*100}%" title="Pengeluaran ${money(m.expense)}"></span></div><small>${m.label}</small></div>`).join("");
+  $("report-transaction-list").innerHTML=inRange.length?inRange.map(t=>rowHTML(t)).join(""):'<div class="empty-state">Belum ada transaksi pada periode ini.</div>';
+}
+function render(){renderDashboard();renderTransactions();renderInstallments();if($("reports-page").classList.contains("active"))renderReports();}
 $("today-label").textContent=today.toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"}).toUpperCase();
 $("save-budget").onclick=()=>{state.budget=Math.max(0,Number($("budget-input").value)||0);save();toast("Budget diperbarui.");};
 $("transaction-filter").onchange=renderTransactions;
+$("report-period").onchange=()=>{$("report-custom-range").hidden=$("report-period").value!=="custom";renderReports();};
+$("report-start").onchange=renderReports;$("report-end").onchange=renderReports;
 function showTransactionForm(){ $("transaction-form-panel").hidden=false; $("transaction-form-panel").scrollIntoView({behavior:"smooth",block:"start"}); }
 function hideTransactionForm(){ $("transaction-form-panel").hidden=true; $("transaction-form").reset(); $("transaction-id").value=""; $("form-title").textContent="Tambah transaksi"; populateCategories(); }
 function populateCategories(){const type=$("transaction-type").value;const old=$("transaction-category").value;$("transaction-category").innerHTML=categories[type].map(c=>`<option>${c}</option>`).join("");if(categories[type].includes(old))$("transaction-category").value=old;}
