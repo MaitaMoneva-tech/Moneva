@@ -14,6 +14,22 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div id="moneva-splash" aria-label="MONEVA loading">
+    <div class="splash-drop"></div>
+    <div class="splash-ripple"></div>
+    <div class="splash-brand">MONEVA</div>
+    <div class="splash-tagline">Your Money, Your Moment.</div>
+  </div>
+  <script>
+    try {
+      const splash = document.getElementById("moneva-splash");
+      if (sessionStorage.getItem("moneva-splash-seen") === "1") {
+        splash.remove();
+      } else {
+        sessionStorage.setItem("moneva-splash-seen", "1");
+      }
+    } catch (error) {}
+  </script>
   <div class="app-shell">
     <aside class="sidebar">
       <a class="brand" href="#" aria-label="MONEVA home">
@@ -49,7 +65,7 @@
 
       <section id="dashboard-page" class="page active">
         <div class="welcome-row">
-          <div><h2>Halo, selamat datang ✨</h2><p>Yuk, lihat kondisi keuanganmu hari ini.</p></div>
+          <div><h2 id="greeting-title">Halo, selamat datang 👋</h2><p>Yuk, lihat kondisi keuanganmu hari ini.</p></div>
           <button class="primary-btn" id="quick-add">＋ Catat transaksi</button>
         </div>
         <div class="summary-grid">
@@ -165,6 +181,35 @@
     </main>
   </div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="profile-modal" class="profile-modal" hidden>
+  <div class="profile-modal-card">
+    <button type="button" id="profile-close" class="profile-close">×</button>
+    <h2>Profil Pengguna</h2>
+    <p>Personalisasi pengalaman MONEVA kamu.</p>
+
+    <label for="profile-name">Nama pengguna</label>
+    <input
+      type="text"
+      id="profile-name"
+      placeholder="Masukkan nama kamu"
+      maxlength="30"
+    >
+
+    <div class="theme-picker">
+  <label for="theme-select">Tema aplikasi</label>
+  <select id="theme-select">
+    <option value="lavender">Lavender</option>
+    <option value="ocean">Ocean Blue</option>
+    <option value="sage">Sage Green</option>
+    <option value="beige">Warm Beige</option>
+  </select>
+</div>
+    <div class="profile-modal-actions">
+      <button type="button" id="profile-cancel">Batal</button>
+      <button type="button" id="profile-save">Simpan</button>
+    </div>
+  </div>
+</div>
   <script src="app.js"></script>
   <script>
     if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {

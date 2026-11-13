@@ -19,6 +19,8 @@ const seed = {
 };
 let state;
 try { state = JSON.parse(localStorage.getItem("moneva-v1")) || seed; } catch { state = seed; }
+if (!state.profile) state.profile = { name: "" };
+if (!state.theme) state.theme = "lavender";
 function save(){ localStorage.setItem("moneva-v1",JSON.stringify(state)); render(); }
 function toast(message){ const el=$("toast"); el.textContent=message; el.classList.add("show"); setTimeout(()=>el.classList.remove("show"),2200); }
 function monthTransactions(){return state.transactions.filter(t=>monthKey(t.date)===monthKey(isoToday(today)));}
@@ -95,7 +97,16 @@ function renderReports(){
   $("report-monthly-trend").innerHTML=monthList.map(m=>`<div class="trend-month"><div class="trend-bars"><span class="trend-income" style="height:${m.income/max*100}%" title="Pemasukan ${money(m.income)}"></span><span class="trend-expense" style="height:${m.expense/max*100}%" title="Pengeluaran ${money(m.expense)}"></span></div><small>${m.label}</small></div>`).join("");
   $("report-transaction-list").innerHTML=inRange.length?inRange.map(t=>rowHTML(t)).join(""):'<div class="empty-state">Belum ada transaksi pada periode ini.</div>';
 }
-function render(){renderDashboard();renderTransactions();renderInstallments();if($("reports-page").classList.contains("active"))renderReports();}
+function render(){
+  if(state.profile.name){
+  $("greeting-title").textContent = `Halo, ${state.profile.name} 👋`;
+  }
+  renderDashboard();
+  renderTransactions();
+  renderInstallments();
+const reportsPage = $("reports-page");
+if (reportsPage && reportsPage.classList.contains("active")) renderReports();
+}
 $("today-label").textContent=today.toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"}).toUpperCase();
 $("save-budget").onclick=()=>{state.budget=Math.max(0,Number($("budget-input").value)||0);save();toast("Budget diperbarui.");};
 $("transaction-filter").onchange=renderTransactions;
@@ -118,3 +129,74 @@ function editInstallment(id){const x=state.installments.find(i=>i.id===id);if(!x
 $("installment-form").onsubmit=e=>{e.preventDefault();const id=$("installment-id").value;const item={id:id||"loan-"+Date.now(),name:$("installment-name").value.trim(),principal:Number($("installment-principal").value),remaining:Number($("installment-remaining").value),monthly:Number($("installment-monthly").value),due:$("installment-due").value,note:$("installment-note").value.trim()};if(!item.name||item.principal<=0||item.remaining<0||item.remaining>item.principal||item.monthly<=0||!item.due)return toast("Periksa nominal dan tanggal cicilan.");if(id)state.installments=state.installments.map(x=>x.id===id?item:x);else state.installments.push(item);save();hideInstallmentForm();toast(id?"Cicilan diperbarui.":"Cicilan ditambahkan.");};
 $("transaction-date").value=isoToday(today);$("installment-due").value=isoToday(new Date(today.getFullYear(),today.getMonth(),today.getDate()+7));
 render();
+
+const profileAvatar = document.querySelector(".avatar");
+
+if (profileAvatar) {
+  profileAvatar.style.cursor = "pointer";
+  profileAvatar.title = "Klik untuk mengatur nama";
+
+  profileAvatar.textContent = state.profile.name
+    ? state.profile.name.trim().charAt(0).toUpperCase()
+    : "M";
+
+  const profileModal = document.querySelector("#profile-modal");
+const profileInput = document.querySelector("#profile-name");
+const profileSave = document.querySelector("#profile-save");
+const profileCancel = document.querySelector("#profile-cancel");
+const profileClose = document.querySelector("#profile-close");
+const themeSelect = document.querySelector("#theme-select");
+
+function applyTheme(theme) {
+  const allowedThemes = ["lavender", "ocean", "sage", "beige"];
+  const selectedTheme = allowedThemes.includes(theme) ? theme : "lavender";
+
+  document.documentElement.setAttribute("data-theme", selectedTheme);
+}
+
+applyTheme(state.theme);
+
+if (themeSelect) {
+  themeSelect.value = state.theme;
+
+  themeSelect.addEventListener("change", () => {
+    state.theme = themeSelect.value;
+    applyTheme(state.theme);
+    save();
+  });
+}
+function closeProfileModal() {
+  profileModal.hidden = true;
+}
+
+profileAvatar.addEventListener("click", () => {
+  profileInput.value = state.profile.name || "";
+  profileModal.hidden = false;
+  profileInput.focus();
+});
+
+profileCancel.addEventListener("click", closeProfileModal);
+profileClose.addEventListener("click", closeProfileModal);
+
+profileModal.addEventListener("click", (event) => {
+  if (event.target === profileModal) {
+    closeProfileModal();
+  }
+});
+
+profileSave.addEventListener("click", () => {
+  const cleanName = profileInput.value.trim();
+
+  if (!cleanName) {
+    alert("Nama tidak boleh kosong.");
+    profileInput.focus();
+    return;
+  }
+
+  state.profile.name = cleanName;
+  save();
+
+  profileAvatar.textContent = cleanName.charAt(0).toUpperCase();
+  closeProfileModal();
+});
+}

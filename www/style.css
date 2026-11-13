@@ -7,3 +7,313 @@
 .report-filter-panel{padding:19px 21px}.report-filter-heading{display:flex;align-items:center;justify-content:space-between;gap:14px}.report-filter-heading h3{font-family:Georgia,serif;font-size:17px;font-weight:500;margin:0 0 5px}.report-filter-heading p{font-size:12px;color:var(--muted);margin:0}.report-period-label{font-size:10px;color:#a18d9b;margin:12px 0 0}.report-custom-range{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:15px}.report-summary-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-bottom:17px}.report-stat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:19px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px}.report-stat span{font-size:11px;color:var(--muted)}.report-stat strong{font-family:Georgia,serif;font-size:22px;overflow-wrap:anywhere}.report-stat small{font-size:10px;color:#aa9eaa}.income-report strong{color:var(--green)}.expense-report strong{color:var(--red)}.balance-report strong{color:var(--mauve)}.report-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.report-panel{min-width:0}.report-bars{display:grid;gap:17px}.report-bar-row{display:grid;gap:7px}.report-bar-label{display:flex;justify-content:space-between;gap:10px;font-size:11px}.report-bar-label strong{white-space:nowrap}.report-bar-track{height:8px;border-radius:20px;background:#f2ebf0;overflow:hidden}.report-bar-track span{display:block;height:100%;border-radius:20px;background:linear-gradient(90deg,#c99ab2,#a78eae)}.report-bar-row small{font-size:9px;color:#aa9eaa}.monthly-trend{height:165px;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;align-items:end;padding:8px 5px 0}.trend-month{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:8px;min-width:0}.trend-bars{height:125px;width:100%;display:flex;align-items:flex-end;justify-content:center;gap:4px;border-bottom:1px solid #eee5eb}.trend-bars span{display:block;width:min(25px,38%);min-height:2px;border-radius:5px 5px 0 0}.trend-income{background:#9bbba8}.trend-expense{background:#c99ab2}.trend-month small{font-size:10px;color:#9c8c99}.report-count{font-size:10px;color:#a18d9b;white-space:nowrap}.report-transaction-list .transaction-row{gap:10px}.report-transaction-list .transaction-info{min-width:0}
 @media(max-width:900px){.report-grid{grid-template-columns:1fr}}
 @media(max-width:600px){.nav{grid-template-columns:repeat(4,1fr)}.nav-btn{font-size:9px;padding:7px 2px}.report-summary-grid{grid-template-columns:1fr 1fr;gap:9px}.report-stat{padding:14px}.report-stat strong{font-size:17px}.balance-report{grid-column:span 2}.report-filter-heading{align-items:flex-start;flex-direction:column}.report-custom-range{grid-template-columns:1fr}.monthly-trend{gap:6px}.trend-month small{font-size:9px}}
+/* MONEVA PROFILE POPUP */
+.profile-modal[hidden] {
+  display: none !important;
+}
+
+.profile-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(35, 30, 45, 0.45);
+  backdrop-filter: blur(5px);
+}
+
+.profile-modal-card {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  padding: 28px;
+  border-radius: 24px;
+  background: #ffffff;
+  box-shadow: 0 18px 50px rgba(50, 35, 70, 0.18);
+  color: #40384a;
+}
+
+.profile-modal-card h2 {
+  margin: 0 0 8px;
+  color: #8065a5;
+  font-size: 22px;
+}
+
+.profile-modal-card p {
+  margin: 0 0 24px;
+  color: #827b89;
+  font-size: 13px;
+}
+
+.profile-modal-card label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.profile-modal-card input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid #e4ddec;
+  border-radius: 12px;
+  outline: none;
+  font: inherit;
+}
+
+.profile-modal-card input:focus {
+  border-color: #a58ac5;
+  box-shadow: 0 0 0 3px rgba(165, 138, 197, 0.15);
+}
+
+.profile-close {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  border: 0;
+  background: transparent;
+  color: #827b89;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.profile-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.profile-modal-actions button {
+  padding: 11px 18px;
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#profile-cancel {
+  background: #f2eff5;
+  color: #71677c;
+}
+
+#profile-save {
+  background: #9b83b9;
+  color: #ffffff;
+}
+
+/* MONEVA THEME: OCEAN BLUE */
+:root[data-theme="ocean"] {
+  --rose: #a8c9dc;
+  --rose-dark: #527f9b;
+  --mauve: #648ba5;
+  --lavender: #c5dce9;
+  --cream: #f3f8fb;
+  --ink: #354b5a;
+  --muted: #8296a3;
+  --line: #e1edf3;
+  --white: #ffffff;
+  --green: #6d9f91;
+  --red: #c9828b;
+  --shadow: 0 12px 35px rgba(65, 105, 130, .08);
+}
+
+/* MONEVA THEME: SAGE GREEN */
+:root[data-theme="sage"] {
+  --rose: #b8cbb5;
+  --rose-dark: #718d75;
+  --mauve: #819b83;
+  --lavender: #d2dfcf;
+  --cream: #f5f8f2;
+  --ink: #3e5141;
+  --muted: #89968a;
+  --line: #e5ece1;
+  --white: #ffffff;
+  --green: #6d9974;
+  --red: #bd8580;
+  --shadow: 0 12px 35px rgba(76, 105, 78, .08);
+}
+
+/* MONEVA THEME: WARM BEIGE */
+:root[data-theme="beige"] {
+  --rose: #d8b99e;
+  --rose-dark: #9d795e;
+  --mauve: #a98970;
+  --lavender: #e8d5c2;
+  --cream: #faf5ee;
+  --ink: #514438;
+  --muted: #988779;
+  --line: #eee4d9;
+  --white: #ffffff;
+  --green: #82977a;
+  --red: #c18479;
+  --shadow: 0 12px 35px rgba(115, 85, 60, .08);
+}
+
+/* MONEVA THEME COLOR LAYER */
+
+:root {
+  --theme-bg: #fbf7f2;
+  --theme-surface: #ffffff;
+  --theme-primary: #8c6d82;
+  --theme-primary-soft: #f3edf1;
+  --theme-text: #493d47;
+  --theme-muted: #958895;
+  --theme-border: #eee5eb;
+}
+
+:root[data-theme="ocean"] {
+  --theme-bg: #f1f7fa;
+  --theme-surface: #ffffff;
+  --theme-primary: #648ba5;
+  --theme-primary-soft: #e5f0f6;
+  --theme-text: #354b5a;
+  --theme-muted: #8296a3;
+  --theme-border: #dceaf1;
+}
+
+:root[data-theme="sage"] {
+  --theme-bg: #f3f7f0;
+  --theme-surface: #ffffff;
+  --theme-primary: #819b83;
+  --theme-primary-soft: #e8f0e5;
+  --theme-text: #3e5141;
+  --theme-muted: #89968a;
+  --theme-border: #e0e9dc;
+}
+
+:root[data-theme="beige"] {
+  --theme-bg: #faf5ee;
+  --theme-surface: #ffffff;
+  --theme-primary: #a98970;
+  --theme-primary-soft: #f1e7dc;
+  --theme-text: #514438;
+  --theme-muted: #988779;
+  --theme-border: #eee4d9;
+}
+
+/* Main application surfaces */
+body,
+.main-content {
+  background-color: var(--theme-bg);
+  color: var(--theme-text);
+}
+
+.sidebar,
+.card,
+.stat-card,
+.report-stat,
+.profile-modal-card {
+  background-color: var(--theme-surface);
+  color: var(--theme-text);
+}
+
+.nav-btn.active,
+#profile-save {
+  background-color: var(--theme-primary);
+}
+
+.nav-btn {
+  color: var(--theme-muted);
+}
+
+input,
+select,
+textarea {
+  color: var(--theme-text);
+  border-color: var(--theme-border);
+}
+
+h1, h2, h3, p, label {
+  color: var(--theme-text);
+}
+
+/* MONEVA WATER RIPPLE SPLASH SCREEN */
+
+#moneva-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--theme-bg, #fbf7f2);
+  color: var(--theme-primary, #8c6d82);
+  animation: splash-exit 0.5s ease 1.7s forwards;
+}
+
+.splash-drop {
+  position: absolute;
+  top: 35%;
+  width: 12px;
+  height: 18px;
+  border-radius: 70% 30% 65% 35%;
+  background: var(--theme-primary, #8c6d82);
+  opacity: 0;
+  transform: translateY(-45px) rotate(45deg);
+  animation: drop-fall 0.55s ease 0.15s forwards;
+}
+
+.splash-ripple {
+  position: absolute;
+  top: calc(35% + 18px);
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--theme-primary, #8c6d82);
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0.2);
+  animation: ripple-spread 1s ease 0.65s forwards;
+}
+
+.splash-brand {
+  margin-top: 35px;
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: 7px;
+  opacity: 0;
+  animation: splash-fade 0.7s ease 0.85s forwards;
+}
+
+.splash-tagline {
+  margin-top: 10px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  opacity: 0;
+  animation: splash-fade 0.7s ease 1.05s forwards;
+}
+
+@keyframes drop-fall {
+  0% { opacity: 0; transform: translateY(-45px) rotate(45deg); }
+  70% { opacity: 1; transform: translateY(0) rotate(45deg); }
+  100% { opacity: 0; transform: translateY(5px) rotate(45deg); }
+}
+
+@keyframes ripple-spread {
+  0% { opacity: 0.8; transform: scale(0.2); }
+  100% { opacity: 0; transform: scale(7); }
+}
+
+@keyframes splash-fade {
+  to { opacity: 1; }
+}
+
+@keyframes splash-exit {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #moneva-splash {
+    animation-duration: 0.2s;
+    animation-delay: 0.5s;
+  }
+}
